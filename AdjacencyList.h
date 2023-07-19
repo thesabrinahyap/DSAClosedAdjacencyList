@@ -9,13 +9,13 @@ typedef char String[20];
 typedef enum{EMPTY, OCCUPIED, DELETED} hashStatus;
 typedef struct{
 	String* data;
-	hashStatus status;
 	int count;
 	int max;
 }ArrayList;
 
 typedef struct{
 	String key;
+	hashStatus status;
 	ArrayList value;
 }ListType;
 
@@ -27,11 +27,11 @@ typedef struct{
 
 void initList(AdjacencyList *list);
 ArrayList initializeValue(int max);
-int getHash(String key);
-bool addVertex(AdjacencyList A, String elem);
-bool addEdge(AdjacencyList A, String vertex, String edge);
-bool deleteVertex(AdjacencyList A, String elem);
-bool deleteVertex(AdjacencyList A, String vertex, String edge);
+int getHash(String key, int ndx);
+bool addVertex(AdjacencyList* A, String elem);
+bool addEdge(AdjacencyList* A, String vertex, String edge);
+bool deleteVertex(AdjacencyList* A, String elem);
+bool deleteEdge(AdjacencyList* A, String vertex, String edge);
 void displayList(AdjacencyList A);
 
 #endif
