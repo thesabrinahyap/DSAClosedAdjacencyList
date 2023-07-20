@@ -13,9 +13,10 @@ int main(int argc, char *argv[]) {
 	initList(&arr);
 	bool state;
 	int i, j;
-	ResultsList r;
+	ResultsList d, b;
 
-	r.count = 0;
+	d.count = 0;
+	b.count = 0;
 	
 	state = addVertex(&arr, "Tokyo");
 	state = addVertex(&arr, "Taiwan");
@@ -42,6 +43,7 @@ int main(int argc, char *argv[]) {
 	printf("\nWITH EDGES \n\n");
 	displayList(arr);
 	
+//	gi comment ni sabrinah to visualize the graph traversals
 //	printf("\n\nREMOVE EDGE\n\n");
 //	state = deleteEdge(&arr, "Mandaue", "Cebu");
 //	displayList(arr);
@@ -55,5 +57,8 @@ int main(int argc, char *argv[]) {
 //	return 0;
 	
 	printf("\n\n DEPTH FIRST SEARCH\n\n");
-	DFS(arr, "Cebu", &r);
+	DFS(arr, "Cebu", &d);
+	
+	printf("\n\n BREADTH FIRST SEARCH\n\n");
+	BFS(arr, "Cebu", &b);
 }

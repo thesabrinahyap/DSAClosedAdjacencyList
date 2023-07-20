@@ -28,12 +28,8 @@ typedef struct{
 	String elems[ALPHABET_MAX];
 	int count;
 }ResultsList;
-//traversal data structure
 
-typedef struct{
-	String elems[ALPHABET_MAX];
-	int top;	
-}Stack;
+//traversal data structure
 
 typedef struct{
 	String elems[ALPHABET_MAX];
@@ -52,12 +48,16 @@ bool deleteVertex(AdjacencyList* A, String elem);
 bool deleteEdge(AdjacencyList* A, String vertex, String edge);
 void displayList(AdjacencyList A);
 
-//traversals
-Stack newStack();
-void DFS(AdjacencyList A, String vertex, ResultsList *R);
+//queue functions
 Queue newQueue();
-void BFS(AdjacencyList A, String elem);
+bool isEmpty(Queue *q);
+bool isFull(Queue *q);
+void enqueue(Queue *q, String vertex);
+char* dequeue(Queue *q);
 
 
+//traversals
+void DFS(AdjacencyList A, String vertex, ResultsList *R);
+void BFS(AdjacencyList A, String vertex, ResultsList *R);
 
 #endif

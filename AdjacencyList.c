@@ -46,11 +46,12 @@ bool addEdge(AdjacencyList *A, String vertex, String edge){
 	bool vertexState = false;
 	int vNdx = getHash(vertex, 0);
 	
-	while(strcmp(A->List[vNdx].key, vertex) != 0 && A->List[vNdx].status != EMPTY){
-		vNdx = getHash(vertex, ++ctr) % ALPHABET_MAX;
+	while(A->List[vNdx].status != EMPTY){
 		if(strcmp(A->List[vNdx].key, vertex) == 0){
 			vertexState = true;
 			break;
+		}else{
+			vNdx = getHash(vertex, ++ctr) % ALPHABET_MAX;
 		}
 	}
 	if(vertexState == true){
@@ -82,11 +83,12 @@ bool deleteEdge(AdjacencyList* A, String vertex, String edge){
 	int vNdx = getHash(vertex, hashCtr);
 	int state = false;
 	
-	while(strcmp(A->List[vNdx].key, vertex)!= 0){
-		vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
-		if (strcmp(A->List[vNdx].key, vertex)== 0){
+	while(A->List[vNdx].status != EMPTY){
+		if(strcmp(A->List[vNdx].key, vertex) == 0){
 			state = true;
 			break;
+		}else{
+			vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
 		}
 	}
 	if(state == true){
@@ -138,23 +140,17 @@ void displayList(AdjacencyList A){
 		}
 	}
 }
-
-Stack newStack(){
-	Stack s;
-	s.top = 0;
-	
-	return s;
-}
 void DFS(AdjacencyList A, String vertex, ResultsList *R){
 	int hashCtr = 0, resultsCtr = 0, listCtr = 0;
 	int vNdx = getHash(vertex, hashCtr);
 	int state = false;
 	
-	while(strcmp(A.List[vNdx].key, vertex)!= 0){
-		vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
-		if (strcmp(A.List[vNdx].key, vertex)== 0){
+	while(A.List[vNdx].status != EMPTY){
+		if(strcmp(A.List[vNdx].key, vertex) == 0){
 			state = true;
 			break;
+		}else{
+			vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
 		}
 	}
 	//if vertex is empty
@@ -170,7 +166,11 @@ void DFS(AdjacencyList A, String vertex, ResultsList *R){
 
 	//look through each neighbor in vertex's neighbors
 	while(listCtr < A.List[vNdx].value.count){
+		//need to re-initizalize because this is recursive and these variables shouldn't be retained
+		//kumbaga everytime this is called, these should be balik sugod~~
 		bool flag = false;
+		resultsCtr = 0;
+		
 		while(resultsCtr < R->count){
 			//if neighbor is not visited
 			if(strcmp(A.List[vNdx].value.data[listCtr], R->elems[resultsCtr]) == 0){
@@ -180,7 +180,7 @@ void DFS(AdjacencyList A, String vertex, ResultsList *R){
 			resultsCtr++;
 		}
 		if(flag == false){
-			DFS(A, A.List[vNdx].value.data[resultsCtr], R);
+			DFS(A, A.List[vNdx].value.data[listCtr], R);
 		}
 		listCtr++;
 	}	
@@ -197,10 +197,88 @@ void DFS(AdjacencyList A, String vertex, ResultsList *R){
 }
 Queue newQueue(){
 	Queue q;
-	q.front = 0;
-	q.end = 0;
+	q.front = -1;
+	q.end = -1;
 	
 	return q;
 }
-void BFS(AdjacencyList A, String elem);
+
+bool isEmpty(Queue *q){
+	return q->end == -1;
+}
+bool isFull(Queue *q){
+	return q->end == ALPHABET_MAX-1;
+}
+void enqueue(Queue *q, String vertex){
+	if(!isFull(q)){
+		if(q->front == -1){
+			q->front = 0;
+		}
+		q->end++;
+		strcpy(q->elems[q->end], vertex);
+	}
+}
+char* dequeue(Queue *q){
+	char* word = malloc(sizeof(String));
+	if(!isEmpty(q)){
+		strcpy(word,q->elems[q->front]);
+		q->front++;
+		if(q->front > q->end){
+			q->front = q->end = -1;
+		}
+	}
+	return word;
+}
+void BFS(AdjacencyList A, String vertex, ResultsList *R){
+	int state = false;
+	int resultsCtr = 0;
+	Queue q = newQueue();
+	
+	enqueue(&q, vertex);
+	//placing the starting index in the queue
+	strcpy(R->elems[R->count], vertex);
+	printf("%s ",R->elems[R->count]);
+	R->count++;
+	
+	strcpy(R->elems[R->count], vertex);
+	//loop as long as there is anything in the queue
+	while(!isEmpty(&q)){
+		int hashCtr = 0, listCtr = 0;
+		resultsCtr = 0;
+		//remove the first vertex from the queue and push it into the array that stores visited
+		vertex = dequeue(&q);
+		
+		int vNdx = getHash(vertex, hashCtr);
+		while(A.List[vNdx].status != EMPTY){
+			if(strcmp(A.List[vNdx].key, vertex) == 0){
+				state = true;
+				break;
+			}else{
+				vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
+			}
+		}	
+		
+		while(listCtr < A.List[vNdx].value.count){
+			bool flag = false;
+			resultsCtr = 0;
+			
+			while(resultsCtr < R->count){
+				//if neighbor is not visited
+				if(strcmp(A.List[vNdx].value.data[listCtr], R->elems[resultsCtr]) == 0){
+					flag = true;
+					break;
+				} 
+				resultsCtr++;
+			}
+			//enqueue end marked as visited
+			if(flag == false){
+				enqueue(&q,A.List[vNdx].value.data[listCtr]);
+				strcpy(R->elems[R->count], A.List[vNdx].value.data[listCtr]);
+				printf("%s ",R->elems[R->count]);
+				R->count++;
+			}
+			listCtr++;
+		}	
+	}
+}
 
