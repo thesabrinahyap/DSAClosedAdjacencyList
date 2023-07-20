@@ -36,7 +36,18 @@ int main(int argc, char *argv[]) {
 
 	
 	
-	printf("WITH EDGES \n\n");
+	printf("\nWITH EDGES \n\n");
+	displayList(arr);
+	
+	printf("\n\nREMOVE EDGE\n\n");
+	state = deleteEdge(&arr, "Mandaue", "Cebu");
+	displayList(arr);
+	
+	printf("\n\nREMOVE VERTEX\n\n");
+	state = addEdge(&arr, "Cebu", "Marinduque");
+	displayList(arr);
+	printf("\n");
+	state = deleteVertex(&arr, "Cebu");
 	displayList(arr);
 	return 0;
 }

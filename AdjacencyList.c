@@ -9,7 +9,7 @@
 void initList(AdjacencyList* list){
 	int ctr;
 	for(ctr=0; ctr<ALPHABET_MAX; ctr++){
-		strcpy(list->List[ctr].key, EMPTY);
+		list->List[ctr].status = EMPTY;
 	}
 }
 ArrayList initializeValue(int max){
@@ -60,8 +60,71 @@ bool addEdge(AdjacencyList *A, String vertex, String edge){
 	}
 	return false;
 }
-bool deleteVertex(AdjacencyList* A, String elem);
-bool deleteEdge(AdjacencyList* A, String vertex, String edge);
+bool deleteVertex(AdjacencyList* A, String elem){
+	int hashCtr = 0, x = 0, y;
+	int vNdx = 0;
+	bool state = false;
+	
+	while(vNdx < ALPHABET_MAX){
+		if(A->List[vNdx].status != EMPTY && A->List[vNdx].status != DELETED){
+			if(strcmp(A->List[vNdx].key, elem) == 0){
+				A->List[vNdx].status = DELETED;
+				A->List[vNdx].value.count = 0;
+			}else{
+				deleteEdge(A, A->List[vNdx].key, elem);
+			}
+		}
+		vNdx++;
+	}
+}
+bool deleteEdge(AdjacencyList* A, String vertex, String edge){
+	int hashCtr = 0, x = 0, y;
+	int vNdx = getHash(vertex, hashCtr);
+	int state = false;
+	
+	while(strcmp(A->List[vNdx].key, vertex)!= 0){
+		vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
+		if (strcmp(A->List[vNdx].key, vertex)== 0){
+			state = true;
+			break;
+		}
+	}
+	if(state == true){
+		while(x<A->List[vNdx].value.count){
+			if(strcmp(A->List[vNdx].value.data[x], edge) == 0){
+				A->List[vNdx].value.count--;
+				for(y=x; x<A->List[vNdx].value.count; x++){
+					strcpy(A->List[vNdx].value.data[y], A->List[vNdx].value.data[y+1]);
+				}
+				state = true;
+			}
+			x++;
+		}
+	}
+	return state;
+}
+
+//bool deleteEdge(AdjacencyList *A, int ndx, String edge){
+//	int x = 0, y;
+//	int hashCtr = 0;
+//	bool state = false;
+//	int eNdx = getHash(edge, hashCtr);
+//	
+//	while(x<ALPHABET_MAX){
+//		y = x;
+//		if(strcmp(A->List[ndx].value.data, edge) == 0){
+//			do{
+//				strcpy(A->List[ndx].value.data[y], A->List[ndx].value.data[y+1]);
+//				y++;
+//			} while (A->List[ndx].value.data[y]!= EMPTY);
+//			
+//			A->List[ndx].value.count = A->List[ndx].value.count-1;
+//			state = true;
+//		}
+//		++x;
+//	}
+//	return state;
+//}
 void displayList(AdjacencyList A){
 	int x, y;
 	for(x = 0; x<ALPHABET_MAX; x++){
