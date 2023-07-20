@@ -125,6 +125,7 @@ bool deleteEdge(AdjacencyList* A, String vertex, String edge){
 //	}
 //	return state;
 //}
+
 void displayList(AdjacencyList A){
 	int x, y;
 	for(x = 0; x<ALPHABET_MAX; x++){
@@ -138,4 +139,68 @@ void displayList(AdjacencyList A){
 	}
 }
 
+Stack newStack(){
+	Stack s;
+	s.top = 0;
+	
+	return s;
+}
+void DFS(AdjacencyList A, String vertex, ResultsList *R){
+	int hashCtr = 0, resultsCtr = 0, listCtr = 0;
+	int vNdx = getHash(vertex, hashCtr);
+	int state = false;
+	
+	while(strcmp(A.List[vNdx].key, vertex)!= 0){
+		vNdx = getHash(vertex, ++hashCtr) % ALPHABET_MAX;
+		if (strcmp(A.List[vNdx].key, vertex)== 0){
+			state = true;
+			break;
+		}
+	}
+	//if vertex is empty
+	if(state == false){
+		printf("here");
+		return;	
+	}
+	
+	// add vertex to results list
+	strcpy(R->elems[R->count], vertex);
+	printf("%s ", R->elems[R->count]);
+	R->count++;
+
+	//look through each neighbor in vertex's neighbors
+	while(listCtr < A.List[vNdx].value.count){
+		bool flag = false;
+		while(resultsCtr < R->count){
+			//if neighbor is not visited
+			if(strcmp(A.List[vNdx].value.data[listCtr], R->elems[resultsCtr]) == 0){
+				flag = true;
+				break;
+			} 
+			resultsCtr++;
+		}
+		if(flag == false){
+			DFS(A, A.List[vNdx].value.data[resultsCtr], R);
+		}
+		listCtr++;
+	}	
+	
+	
+//    if vertex is empty
+//        return (this is base case)
+//    add vertex to results list
+//    mark vertex as visited
+//    for each neighbor in vertex's neighbors:
+//       if neighbor is not visited:
+//          recursively call DFS on neighbor
+
+}
+Queue newQueue(){
+	Queue q;
+	q.front = 0;
+	q.end = 0;
+	
+	return q;
+}
+void BFS(AdjacencyList A, String elem);
 

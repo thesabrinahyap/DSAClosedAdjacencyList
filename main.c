@@ -13,6 +13,9 @@ int main(int argc, char *argv[]) {
 	initList(&arr);
 	bool state;
 	int i, j;
+	ResultsList r;
+
+	r.count = 0;
 	
 	state = addVertex(&arr, "Tokyo");
 	state = addVertex(&arr, "Taiwan");
@@ -39,15 +42,18 @@ int main(int argc, char *argv[]) {
 	printf("\nWITH EDGES \n\n");
 	displayList(arr);
 	
-	printf("\n\nREMOVE EDGE\n\n");
-	state = deleteEdge(&arr, "Mandaue", "Cebu");
-	displayList(arr);
+//	printf("\n\nREMOVE EDGE\n\n");
+//	state = deleteEdge(&arr, "Mandaue", "Cebu");
+//	displayList(arr);
+//	
+//	printf("\n\nREMOVE VERTEX\n\n");
+//	state = addEdge(&arr, "Cebu", "Marinduque");
+//	displayList(arr);
+//	printf("\n");
+//	state = deleteVertex(&arr, "Cebu");
+//	displayList(arr);
+//	return 0;
 	
-	printf("\n\nREMOVE VERTEX\n\n");
-	state = addEdge(&arr, "Cebu", "Marinduque");
-	displayList(arr);
-	printf("\n");
-	state = deleteVertex(&arr, "Cebu");
-	displayList(arr);
-	return 0;
+	printf("\n\n DEPTH FIRST SEARCH\n\n");
+	DFS(arr, "Cebu", &r);
 }
